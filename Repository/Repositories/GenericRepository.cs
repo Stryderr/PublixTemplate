@@ -1,17 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Repository.Context;
-using Repository.Models;
+using Repository.Entities;
+using Repository.Interfaces;
 
 namespace Repository.Repositories
 {
-    public interface IGenericRepository : IBaseRepository
-    {
-        Task<List<Generic>> GetAll();
-        Task<Generic> GetById(long id);
-        Task<Generic> Add(Generic entity);
-        Task<Generic> Update(Generic entity);
-        Task<bool> Delete(Generic entity);
-    }
+
 
     public class GenericRepository : BaseRepository, IGenericRepository
     {

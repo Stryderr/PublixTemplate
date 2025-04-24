@@ -1,4 +1,4 @@
-﻿namespace Repository.Models
+﻿namespace Repository.Entities
 {
     public class Generic
     {
