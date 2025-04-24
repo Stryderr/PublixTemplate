@@ -32,7 +32,7 @@ public class Startup
 
 
         // Domain
-        services.AddScoped<IGenericDM, GenericDM>();
+        services.AddScoped<IGenericDomain, GenericDomain>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

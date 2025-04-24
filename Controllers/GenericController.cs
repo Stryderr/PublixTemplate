@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TemplateCSharp.Controllers
@@ -8,9 +9,9 @@ namespace TemplateCSharp.Controllers
     public class GenericController : ControllerBase
     {
         private readonly ILogger<GenericController> _logger;
-        private readonly IGenericDM _dm;
+        private readonly IGenericDomain _dm;
 
-        public GenericController(ILogger<GenericController> logger, IGenericDM dm)
+        public GenericController(ILogger<GenericController> logger, IGenericDomain dm)
         {
             _logger = logger;
             _dm = dm ?? throw new ArgumentNullException(nameof(dm));

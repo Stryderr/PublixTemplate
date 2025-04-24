@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\2. Domain\Domain\Domain.csproj" />
-    <ProjectReference Include="..\3. DataAccess\Repository\Repository.csproj" />
+    <ProjectReference Include="..\4. Shared\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
