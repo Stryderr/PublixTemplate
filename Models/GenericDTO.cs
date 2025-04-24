@@ -1,6 +1,6 @@
 namespace TemplateCSharp.Models
 {
-    public class GenericModelDC
+    public class GenericDTO
     {
 
     }

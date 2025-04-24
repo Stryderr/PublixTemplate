@@ -1,13 +1,14 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
+using Repository.Entities;
 
 namespace Repository.Mappers
 {
     public class GenericRepoMappingProfile : Profile
     {
-        // ENTITY TO ENTITY
-
-
+        public GenericRepoMappingProfile()
+        {
+            // ENTITY TO ENTITY
+            CreateMap<Generic, Generic>();
+        }
     }
 }

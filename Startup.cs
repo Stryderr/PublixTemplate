@@ -1,6 +1,8 @@
 using Domain;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
+using Repository.Interfaces;
 using Repository.Repositories;
 
 public class Startup

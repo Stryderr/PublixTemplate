@@ -7,15 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\**" />
+    <Compile Remove="Repository\**" />
+    <Compile Remove="Shared\**" />
+    <Compile Remove="Test\**" />
+    <Content Remove="Domain\**" />
+    <Content Remove="Repository\**" />
+    <Content Remove="Shared\**" />
+    <Content Remove="Test\**" />
+    <EmbeddedResource Remove="Domain\**" />
+    <EmbeddedResource Remove="Repository\**" />
+    <EmbeddedResource Remove="Shared\**" />
+    <EmbeddedResource Remove="Test\**" />
+    <None Remove="Domain\**" />
+    <None Remove="Repository\**" />
+    <None Remove="Shared\**" />
+    <None Remove="Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mappers\" />
   </ItemGroup>
 
   <ItemGroup>

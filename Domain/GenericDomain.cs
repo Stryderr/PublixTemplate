@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models;
 using Repository.Entities;
 using Repository.Interfaces;
 
 namespace Domain
 {
-    public interface IGenericDomain
-    {
-        Task<List<GenericDM>> GetAll();
-        Task<GenericDM> GetById(long id);
-        Task<GenericDM> Add(GenericDM entity);
-        Task<GenericDM> Update(GenericDM entity);
-        Task<bool> Delete(long id);
-    }
 
     public class GenericDomain : IGenericDomain
     {
