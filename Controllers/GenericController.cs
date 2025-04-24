@@ -1,73 +1,135 @@
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using S0WISRXX.SharedExternal.Logger;
 
 namespace TemplateCSharp.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class GenericController : ControllerBase
     {
-        private readonly ILogger<GenericController> _logger;
+        private readonly IUtilityLogger _logger;
         private readonly IGenericDomain _dm;
 
-        public GenericController(ILogger<GenericController> logger, IGenericDomain dm)
+        public GenericController(IUtilityLogger logger, IGenericDomain dm)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _dm = dm ?? throw new ArgumentNullException(nameof(dm));
         }
 
         [HttpGet]
         [Route("/all")]
-        public ActionResult GetAll()
+        public async Task<ActionResult> GetAll()
         {
-            var result = _dm.GetAll();
-            return Ok(result + "Hello from Generic Get");
+            _logger.LogInformation("Fetching all items.");
+            try
+            {
+                var result = await _dm.GetAll();
+                _logger.LogInformation($"Successfully fetched {result.Count} items.");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching all items.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpGet]
         [Route("/{id}")]
-        public ActionResult GetById(long id)
+        public async Task<ActionResult> GetById(long id)
         {
-            var result = _dm.GetById(id);
-            return Ok(result + "Hello from Generic Get");
+            _logger.LogInformation($"Fetching item with ID {id}.");
+            try
+            {
+                var result = await _dm.GetById(id);
+                if (result == null)
+                {
+                    _logger.LogInformation($"Item with ID {id} not found.");
+                    return NoContent();
+                }
+                _logger.LogInformation($"Successfully fetched item with ID {id}.");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching the item with ID {id}.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpPost]
-        // [Route("")]
-        public IActionResult Create([FromBody] GenericDM newItem)
+        public async Task<IActionResult> Create([FromBody] GenericDM newItem)
         {
             if (newItem == null)
             {
                 return BadRequest("Invalid data.");
             }
-            var result = _dm.Add(newItem);
-            return Ok(result + "Hello from Generic Post");
+
+            _logger.LogInformation("Creating a new item.");
+            try
+            {
+                var result = await _dm.Add(newItem);
+                _logger.LogInformation($"Successfully created item with ID {result.Id}.");
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating a new item.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpPut]
-        // [Route("")]
-        public IActionResult Update([FromBody] GenericDM updatedItem)
+        public async Task<IActionResult> Update([FromBody] GenericDM updatedItem)
         {
             if (updatedItem == null)
             {
                 return BadRequest("Invalid data.");
             }
-            var result = _dm.Update(updatedItem);
-            return Ok(result + "Hello from Generic Put");
+
+            _logger.LogInformation($"Updating item with ID {updatedItem.Id}.");
+            try
+            {
+                var result = await _dm.Update(updatedItem);
+                _logger.LogInformation($"Successfully updated item with ID {result.Id}.");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating the item with ID {updatedItem.Id}.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpDelete]
-        // [Route("")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
-            var result = _dm.Delete(id);
-            return Ok(result + "Hello from Generic Delete");
-        }
 
+            _logger.LogInformation($"Deleting item with ID {id}.");
+            try
+            {
+                var result = await _dm.Delete(id);
+                if (!result)
+                {
+                    _logger.LogInformation($"Item with ID {id} not found or could not be deleted.");
+                    return NoContent();
+                }
+                _logger.LogInformation($"Successfully deleted item with ID {id}.");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting the item with ID {id}.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
     }
 }

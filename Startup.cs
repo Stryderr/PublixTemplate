@@ -1,4 +1,4 @@
-using Domain;
+using Domain.DomainObjects;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
