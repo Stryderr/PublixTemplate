@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Models;
-using Repository.Models;
-using Repository.Repositories;
+using Repository.Entities;
+using Repository.Interfaces;
 
 namespace Domain
 {
