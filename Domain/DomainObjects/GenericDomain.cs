@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
-using Domain.Mappers;
 using Domain.Models;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -8,18 +7,15 @@ using S0WISRXX.SharedExternal.Logger;
 
 namespace Domain.DomainObjects
 {
-
-    public class GenericDomain : IGenericDomain
+    public class GenericDomain : BaseDomain, IGenericDomain
     {
         private readonly IGenericRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUtilityLogger _logger;
 
-        public GenericDomain(IUtilityLogger logger, IGenericRepository repo)
+        public GenericDomain(IGenericRepository repo, IMapper mapper, IUtilityLogger logger) : base(mapper, logger)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
-            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<GenericDomainMappingProfile>()).CreateMapper();
         }
 
         public async Task<List<GenericDM>> GetAll()

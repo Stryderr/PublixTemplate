@@ -9,19 +9,16 @@ namespace TemplateCSharp.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class GenericController : ControllerBase
+    public class GenericController : BaseController
     {
-        private readonly IUtilityLogger _logger;
         private readonly IGenericDomain _dm;
 
-        public GenericController(IUtilityLogger logger, IGenericDomain dm)
+        public GenericController(IUtilityLogger logger, IGenericDomain dm) : base(logger)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _dm = dm ?? throw new ArgumentNullException(nameof(dm));
         }
 
         [HttpGet]
-        [Route("/all")]
         public async Task<ActionResult> GetAll()
         {
             _logger.LogInformation("Fetching all items.");
@@ -64,12 +61,10 @@ namespace TemplateCSharp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] GenericDM newItem)
         {
-            if (newItem == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-
             _logger.LogInformation("Creating a new item.");
+
+            if (newItem == null) return BadRequest("Invalid data.");
+
             try
             {
                 var result = await _dm.Add(newItem);
@@ -86,12 +81,10 @@ namespace TemplateCSharp.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] GenericDM updatedItem)
         {
-            if (updatedItem == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-
             _logger.LogInformation($"Updating item with ID {updatedItem.Id}.");
+
+            if (updatedItem == null) return BadRequest("Invalid data.");
+
             try
             {
                 var result = await _dm.Update(updatedItem);
@@ -108,12 +101,10 @@ namespace TemplateCSharp.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid ID.");
-            }
-
             _logger.LogInformation($"Deleting item with ID {id}.");
+
+            if (id <= 0) return BadRequest("Invalid ID.");
+
             try
             {
                 var result = await _dm.Delete(id);

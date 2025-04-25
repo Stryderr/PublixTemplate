@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using Repository.Entities;
@@ -7,41 +8,31 @@ using S0WISRXX.SharedExternal.Logger;
 
 namespace Repository.Repositories
 {
-
-
     public class GenericRepository : BaseRepository, IGenericRepository
     {
-        private readonly IUtilityLogger _logger;
-
-        public GenericRepository(IUtilityLogger logger, GenericContext context) : base(context)
+        public GenericRepository(IUtilityLogger logger, IMapper mapper, GenericContext context) : base(context, mapper, logger)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<List<Generic>> GetAll()
         {
             _logger.LogInformation("Starting to fetch all entities.");
-            try
+
+            return await ExecuteWithLoggingAsync(async () =>
             {
                 var result = await _context.Generics.ToListAsync();
                 _logger.LogInformation($"Successfully fetched {result.Count} entities.");
                 return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching all entities.");
-                throw;
-            }
+            }, "An error occurred while fetching all entities.");
         }
 
-        public async Task<Generic> GetById(long id)
+        public async Task<Generic?> GetById(long id)
         {
             _logger.LogInformation($"Starting to fetch entity with ID {id}.");
-            try
-            {
-                if (id <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(id), "Id must be greater than zero.");
+            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id), "Id must be greater than zero.");
 
+            return await ExecuteWithLoggingAsync(async () =>
+            {
                 var entity = await _context.Generics.FindAsync(id);
                 if (entity == null)
                 {
@@ -51,41 +42,30 @@ namespace Repository.Repositories
 
                 _logger.LogInformation($"Successfully fetched entity with ID {id}.");
                 return entity;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while fetching the entity with ID {id}.");
-                throw;
-            }
+            }, $"An error occurred while fetching the entity with ID {id}.");
         }
 
-        public async Task<Generic> Add(Generic entity)
+        public async Task<Generic?> Add(Generic entity)
         {
             _logger.LogInformation("Starting to add a new entity.");
-            try
-            {
-                if (entity == null)
-                    return null;
+            if (entity == null) return null;
 
+            return await ExecuteWithLoggingAsync(async () =>
+            {
                 _context.Generics.Add(entity);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Successfully added entity with ID {entity.Id}.");
                 return entity;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while adding a new entity.");
-                throw;
-            }
+            }, "An error occurred while adding a new entity.");
         }
 
-        public async Task<Generic> Update(Generic entity)
+        public async Task<Generic?> Update(Generic entity)
         {
             _logger.LogInformation($"Starting to update entity with ID {entity.Id}.");
-            try
+            if (entity == null) return null;
+
+            return await ExecuteWithLoggingAsync(async () =>
             {
-                if (entity == null)
-                    return null;
 
                 var existingEntity = await _context.Generics.FindAsync(entity.Id);
                 if (existingEntity == null)
@@ -98,32 +78,21 @@ namespace Repository.Repositories
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Successfully updated entity with ID {entity.Id}.");
                 return existingEntity;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while updating the entity with ID {entity.Id}.");
-                throw;
-            }
+            }, $"An error occurred while updating the entity with ID {entity.Id}.");
         }
 
         public async Task<bool> Delete(Generic entity)
         {
             _logger.LogInformation($"Starting to delete entity with ID {entity.Id}.");
-            try
-            {
-                if (entity == null)
-                    return true;
+            if (entity == null) return true;
 
+            return await ExecuteWithLoggingAsync(async () =>
+            {
                 _context.Generics.Remove(entity);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Successfully deleted entity with ID {entity.Id}.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while deleting the entity with ID {entity.Id}.");
-                throw;
-            }
+            }, $"An error occurred while deleting the entity with ID {entity.Id}.");
         }
     }
 }
