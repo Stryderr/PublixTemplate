@@ -1,9 +1,8 @@
 ﻿using Repository.Entities;
-using Repository.Repositories;
 
 namespace Repository.Interfaces
 {
-    public interface IGenericRepository : IBaseRepository
+    public interface IGenericRepository
     {
         Task<List<Generic>> GetAll();
         Task<Generic> GetById(long id);
