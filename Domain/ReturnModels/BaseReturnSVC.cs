@@ -1,4 +1,4 @@
-﻿namespace Domain.ReturnModels
+﻿namespace Service.ReturnModels
 {
     public class BaseReturnDM
     {

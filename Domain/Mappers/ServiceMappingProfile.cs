@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using Domain.Models;
+using Service.Models;
 using Repository.Entities;
 
-namespace Domain.Mappers
+namespace Service.Mappers
 {
-    public class GenericDomainMappingProfile : Profile
+    public class ServiceMappingProfile : Profile
     {
-        public GenericDomainMappingProfile()
+        public ServiceMappingProfile()
         {
 
             // ENTITY TO DOAMIN
 
             CreateMap<Generic, GenericDM>();
 
-            // DOMAIN TO ENTITY
+            // SERVICE TO ENTITY
 
             CreateMap<GenericDM, Generic>();
 

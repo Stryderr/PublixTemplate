@@ -1,5 +1,4 @@
-using Domain.DomainObjects;
-using Domain.Interfaces;
+using Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -8,8 +7,9 @@ using Repository.Context;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Serilog;
+using Service.Services;
 
-namespace TemplateCSharp
+namespace SolutionName
 {
     public class Startup
     {
@@ -46,8 +46,8 @@ namespace TemplateCSharp
                options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
 
-            // Domain
-            services.AddScoped<IGenericDomain, GenericDomain>();
+            // Service
+            services.AddScoped<IGenericService, GenericService>();
 
 
             // Repositories

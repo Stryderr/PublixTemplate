@@ -1,6 +1,4 @@
-﻿
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -10,7 +8,7 @@ namespace Repository.Repositories
 {
     public class GenericRepository : BaseRepository, IGenericRepository
     {
-        public GenericRepository(IUtilityLogger logger, IMapper mapper, GenericContext context) : base(context, mapper, logger)
+        public GenericRepository(IUtilityLogger logger, GenericContext context) : base(context, logger)
         {
         }
 
@@ -28,11 +26,13 @@ namespace Repository.Repositories
 
         public async Task<Generic?> GetById(long id)
         {
-            _logger.LogInformation($"Starting to fetch entity with ID {id}.");
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id), "Id must be greater than zero.");
-
             return await ExecuteWithLoggingAsync(async () =>
             {
+                _logger.LogInformation($"Starting to fetch entity with ID {id}.");
+
+                if (id <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(id), "Id must be greater than zero.");
+
                 var entity = await _context.Generics.FindAsync(id);
                 if (entity == null)
                 {
@@ -47,11 +47,13 @@ namespace Repository.Repositories
 
         public async Task<Generic?> Add(Generic entity)
         {
-            _logger.LogInformation("Starting to add a new entity.");
-            if (entity == null) return null;
-
             return await ExecuteWithLoggingAsync(async () =>
             {
+                _logger.LogInformation("Starting to add a new entity.");
+
+                if (entity == null)
+                    return null;
+
                 _context.Generics.Add(entity);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Successfully added entity with ID {entity.Id}.");
@@ -61,11 +63,12 @@ namespace Repository.Repositories
 
         public async Task<Generic?> Update(Generic entity)
         {
-            _logger.LogInformation($"Starting to update entity with ID {entity.Id}.");
-            if (entity == null) return null;
-
             return await ExecuteWithLoggingAsync(async () =>
             {
+                _logger.LogInformation($"Starting to update entity with ID {entity.Id}.");
+
+                if (entity == null)
+                    return null;
 
                 var existingEntity = await _context.Generics.FindAsync(entity.Id);
                 if (existingEntity == null)
@@ -83,11 +86,13 @@ namespace Repository.Repositories
 
         public async Task<bool> Delete(Generic entity)
         {
-            _logger.LogInformation($"Starting to delete entity with ID {entity.Id}.");
-            if (entity == null) return true;
-
             return await ExecuteWithLoggingAsync(async () =>
             {
+                _logger.LogInformation($"Starting to delete entity with ID {entity.Id}.");
+
+                if (entity == null)
+                    return true;
+
                 _context.Generics.Remove(entity);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Successfully deleted entity with ID {entity.Id}.");

@@ -3,9 +3,9 @@ using Repository.Entities;
 
 namespace Repository.Mappers
 {
-    public class GenericRepoMappingProfile : Profile
+    public class RepoMappingProfile : Profile
     {
-        public GenericRepoMappingProfile()
+        public RepoMappingProfile()
         {
             // ENTITY TO ENTITY
             CreateMap<Generic, Generic>();

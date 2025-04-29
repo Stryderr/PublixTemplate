@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using Domain.Interfaces;
-using Domain.Models;
 using Repository.Entities;
 using Repository.Interfaces;
 using S0WISRXX.SharedExternal.Logger;
+using Service.Interfaces;
+using Service.Models;
 
-namespace Domain.DomainObjects
+namespace Service.Services
 {
-    public class GenericDomain : BaseDomain, IGenericDomain
+    public class GenericService : BaseService, IGenericService
     {
         private readonly IGenericRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUtilityLogger _logger;
 
-        public GenericDomain(IGenericRepository repo, IMapper mapper, IUtilityLogger logger) : base(mapper, logger)
+        public GenericService(IGenericRepository repo, IMapper mapper, IUtilityLogger logger) : base(mapper, logger)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }

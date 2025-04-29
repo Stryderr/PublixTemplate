@@ -1,4 +1,4 @@
-namespace TemplateCSharp.Models
+namespace SolutionName.Models
 {
     public class GenericDTO
     {

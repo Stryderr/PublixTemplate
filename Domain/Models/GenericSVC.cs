@@ -1,4 +1,4 @@
-﻿namespace Domain.Models
+﻿namespace Service.Models
 {
     public class GenericDM
     {

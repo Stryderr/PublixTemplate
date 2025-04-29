@@ -1,8 +1,8 @@
-﻿using Domain.Models;
+﻿using Service.Models;
 
-namespace Domain.Interfaces
+namespace Service.Interfaces
 {
-    public interface IGenericDomain
+    public interface IGenericService
     {
         Task<List<GenericDM>> GetAll();
         Task<GenericDM> GetById(long id);

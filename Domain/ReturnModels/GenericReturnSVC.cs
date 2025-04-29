@@ -1,6 +1,6 @@
-﻿using Domain.Models;
+﻿using Service.Models;
 
-namespace Domain.ReturnModels
+namespace Service.ReturnModels
 {
     public class GenericReturnDM : BaseReturnDM
     {
