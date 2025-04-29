@@ -1,4 +1,3 @@
-using Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -7,9 +6,10 @@ using Repository.Context;
 using Repository.Interfaces;
 using Repository.Repositories;
 using Serilog;
+using Service.Interfaces;
 using Service.Services;
 
-namespace SolutionName
+namespace API
 {
     public class Startup
     {
@@ -106,7 +106,7 @@ namespace SolutionName
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
-                                    new Microsoft.OpenApi.Models.OpenApiInfo
+                                    new OpenApiInfo
                                     {
                                         Title = "Reference Architecture - Generic API",
                                         Version = "v1",

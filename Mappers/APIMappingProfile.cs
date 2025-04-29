@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using API.Models;
+using AutoMapper;
 using Service.Models;
-using SolutionName.Models;
 
 namespace SolutionName.Mappers
 {

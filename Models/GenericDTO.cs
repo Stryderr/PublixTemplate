@@ -1,4 +1,4 @@
-namespace SolutionName.Models
+namespace API.Models
 {
     public class GenericDTO
     {
