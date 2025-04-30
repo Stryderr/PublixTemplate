@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Repository.Context;
+using Repository.Interfaces;
 using S0WISRXX.SharedExternal.Logger;
 
 namespace Repository.Repositories
 {
-    public abstract class BaseRepository : IDisposable
+    public class BaseRepository<T> : IDisposable, IBaseRepository<T> where T : class
     {
         protected readonly GenericContext _context;
-        public readonly IUtilityLogger _logger;
-        public readonly IMapper _mapper;
+        protected readonly IUtilityLogger _logger;
+        protected readonly IMapper _mapper;
 
         private bool _disposed = false;
 
@@ -19,7 +21,7 @@ namespace Repository.Repositories
         private string server;
         private string systemID;
 
-        public BaseRepository(GenericContext context, IMapper mapper, IUtilityLogger logger) : base()
+        public BaseRepository(GenericContext context, IMapper mapper, IUtilityLogger logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -28,6 +30,7 @@ namespace Repository.Repositories
             Setvariables();
         }
 
+
         public void Setvariables()
         {
             env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -35,7 +38,7 @@ namespace Repository.Repositories
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env}.json", optional: true)
-            .Build();
+                .Build();
 
             user = Environment.GetEnvironmentVariable("SQLUser");
             password = Environment.GetEnvironmentVariable("SQLPassword");
@@ -43,20 +46,16 @@ namespace Repository.Repositories
             systemID = configuration["AppSettings:SystemID"];
         }
 
-        public async Task<T> ExecuteWithLoggingAsync<T>(Func<Task<T>> func, string errorMessage)
+        public async Task<List<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
+        public async Task<T?> GetByIdAsync(long id) => await _context.Set<T>().FindAsync(id).AsTask();
+        public async Task AddAsync(T entity) => await Task.FromResult(_context.Set<T>().Add(entity));
+        public async Task DeleteAsync(long id)
         {
-            try
-            {
-                // Execute the function and return the result
-                return await func();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception and rethrow it
-                _logger.LogError(ex, errorMessage);
-                throw new Exception(ex.Message);
-            }
+            var entity = await _context.Set<T>().FindAsync(id);
+            if (entity != null) _context.Set<T>().Remove(entity);
         }
+        public Task SaveChangesAsync() => _context.SaveChangesAsync();
+
 
         public void Dispose()
         {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Service.Models;
 using Repository.Entities;
+using Service.Models;
 
 namespace Service.Mappers
 {
@@ -11,11 +11,11 @@ namespace Service.Mappers
 
             // ENTITY TO DOAMIN
 
-            CreateMap<Generic, GenericDM>();
+            CreateMap<Generic, GenericSM>();
 
             // SERVICE TO ENTITY
 
-            CreateMap<GenericDM, Generic>();
+            CreateMap<GenericSM, Generic>();
 
         }
     }

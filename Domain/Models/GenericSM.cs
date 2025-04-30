@@ -1,6 +1,6 @@
 ﻿namespace Service.Models
 {
-    public class GenericDM
+    public class GenericSM
     {
         public long Id { get; set; }
     }

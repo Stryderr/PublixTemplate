@@ -1,12 +1,17 @@
+using API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Repository.Context;
 using Repository.Interfaces;
+using Repository.Mappers;
 using Repository.Repositories;
+using S0WISRXX.SharedExternal.Logger;
+using S0WISRXX.SharedExternal.UIM;
 using Serilog;
 using Service.Interfaces;
+using Service.Mappers;
 using Service.Services;
 
 namespace API
@@ -43,11 +48,29 @@ namespace API
 
             // No other changes are needed in the file as the error is caused by the missing namespace.
             services.AddDbContext<GenericContext>(options =>
-               options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+               options.UseSqlServer(
+                   _config.GetConnectionString("DefaultConnection"),
+                   sqlOptions => sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null)));
+
+
+            // Base
+            services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<ServiceMappingProfile>();
+                cfg.AddProfile<RepoMappingProfile>();
+            });
+
+            services.AddScoped<IUIM, UIM>();
+            services.AddScoped<IUtilityLogger>(x => new UtilityLogger(services.BuildServiceProvider().GetService<UIM>()));
+
+
 
 
             // Service
             services.AddScoped<IGenericService, GenericService>();
+
 
 
             // Repositories
@@ -80,8 +103,9 @@ namespace API
 
             app.UseRouting();
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseStaticFiles(new StaticFileOptions()
             {

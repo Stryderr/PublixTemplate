@@ -9,11 +9,11 @@ namespace SolutionName.Mappers
         public APIMappingProfile()
         {
             // SERVICE TO DTO
-            CreateMap<GenericDM, GenericDTO>();
+            CreateMap<GenericSM, GenericDTO>();
 
 
             // DTO TO SERVICE 
-            CreateMap<GenericDTO, GenericDM>();
+            CreateMap<GenericDTO, GenericSM>();
         }
     }
 }
